@@ -2,9 +2,8 @@
 # Reading through a directory of images and formatting them for input into conv net
 
 import os
-from os import listdir
-from os.path import isfile,join
-
+from PIL import Image
+#  Image.resize(size, resample=0)
 # iterating through directory files, answer by ghostdog74
 # http://stackoverflow.com/questions/3964681/find-all-files-in-a-directory-with-extension-txt-in-python
 def get_images(dirname):
@@ -18,8 +17,30 @@ def get_images(dirname):
 
     return image_files
 
+def resize_images(image_list, size=64):
+    resized_images = []
+    for image in image_list:
+        img = Image.open(image)
+        r_img = img.resize((size,size))
+        resized_images.append(r_img)
+    # print(resized_images)
+    return resized_images
+
+def image_to_greyscale(image_list):
+    grey_images = []
+    for image in image_list:
+        grey_image = image.convert(mode="L")
+        grey_images.append(grey_image)
+    # print(grey_images)
+    return grey_images
+
+def save_images(images):
+    for x in range(len(images)):
+        # print(image.info)
+        images[x].save("./images/grey/"+str(x)+".png", "PNG")
 
 if __name__ == "__main__":
     image_directory = "stewie_griffin_GoogleSearch"
-    print(get_images(image_directory))
+    save_images(image_to_greyscale(resize_images(get_images(image_directory))))
+
 
