@@ -22,7 +22,7 @@ def load_train_images(train_path, image_size, classes):
     for folder in classes:
         index = classes.index(folder)
         path = os.path.join(train_path, folder+'/')
-        print(path)
+        # print(path)
         image_files = get_images(path)
 
         for file in image_files:
@@ -30,17 +30,17 @@ def load_train_images(train_path, image_size, classes):
             image = Image.open(file)
             image = image.resize((image_size, image_size))
             image = image.convert(mode="L")
-            images.append(image)
+            images.append(np.array(image))
             # save the label as a one-hot vector corresponding to the class index
             label = np.zeros(len(classes))
             label[index] = 1.0
             labels.append(label)
 
-    images = (np.array(image) for image in images)
     labels = np.array(labels)
-
-    print(image for image in images)
+    images = np.array(images)
+    print(images)
     print(labels)
+    return images, labels
 
 def get_images(path):
     image_files = []
