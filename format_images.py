@@ -3,37 +3,51 @@
 
 import os
 from PIL import Image
+import numpy as np
 import PIL
 #  Image.resize(size, resample=0)
 # iterating through directory files, answer by ghostdog74
 # http://stackoverflow.com/questions/3964681/find-all-files-in-a-directory-with-extension-txt-in-python
-def get_images(dirname):
+
+
+# modelled after cv-tricks.com tutorial on training a classifier for cats and dogs,
+# using PIL instead of OpenCV
+def load_train_images(train_path, image_size, classes):
+    images = []
+    labels = []
+    # ids = []
+    # cls = []
+
+    # begin reading the images from training path
+    for folder in classes:
+        index = classes.index(folder)
+        path = os.path.join(train_path, folder+'/')
+        print(path)
+        image_files = get_images(path)
+
+        for file in image_files:
+            # load image file -> resize -> convert to greyscale
+            image = Image.open(file)
+            image = image.resize((image_size, image_size))
+            image = image.convert(mode="L")
+            images.append(image)
+            # save the label as a one-hot vector corresponding to the class index
+            label = np.zeros(len(classes))
+            label[index] = 1.0
+            labels.append(label)
+
+    images = (np.array(image) for image in images)
+    labels = np.array(labels)
+
+    print(image for image in images)
+    print(labels)
+
+def get_images(path):
     image_files = []
-
-    for file in os.listdir("./images/" + dirname):
-        # print(file)
+    for file in os.listdir(path):
         if file.endswith(".jpg"):
-            # print(os.path.join("./images/"+dirname, file))
-            image_files.append(os.path.join("./images/"+dirname, file))
-
+            image_files.append(os.path.join(path, file))
     return image_files
-
-def resize_images(image_list, size=64):
-    resized_images = []
-    for image in image_list:
-        img = Image.open(image)
-        r_img = img.resize((size,size))
-        resized_images.append(r_img)
-    # print(resized_images)
-    return resized_images
-
-def image_to_greyscale(image_list):
-    grey_images = []
-    for image in image_list:
-        grey_image = image.convert(mode="L")
-        grey_images.append(grey_image)
-    # print(grey_images)
-    return grey_images
 
 def add_flipped_images(images):
     new_images = images
@@ -57,7 +71,8 @@ def save_images(images):
         images[x].save("./images/grey/"+str(x)+".png", "PNG")
 
 if __name__ == "__main__":
-    image_directory = "stewie_griffin_GoogleSearch"
-    save_images(add_top_bot_flip(add_flipped_images(image_to_greyscale(resize_images(get_images(image_directory))))))
-
+    image_directory = "./images"
+    load_train_images(train_path=image_directory,
+                      image_size=128,
+                      classes=['stewie_griffin_GoogleSearch'])
 
