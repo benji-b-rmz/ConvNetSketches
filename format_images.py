@@ -15,8 +15,6 @@ import PIL
 def load_train_images(train_path, image_size, classes):
     images = []
     labels = []
-    # ids = []
-    # cls = []
 
     # begin reading the images from training path
     for folder in classes:
@@ -42,12 +40,20 @@ def load_train_images(train_path, image_size, classes):
     print(labels)
     return images, labels
 
+
+def format_image(image, image_size):
+    image = image.resize((image_size, image_size))
+    image = image.convert(mode="L")
+    return image
+
+
 def get_images(path):
     image_files = []
     for file in os.listdir(path):
         if file.endswith(".jpg"):
             image_files.append(os.path.join(path, file))
     return image_files
+
 
 def add_flipped_images(images):
     new_images = images
@@ -57,6 +63,7 @@ def add_flipped_images(images):
         new_images.append(flipped_image)
     return new_images
 
+
 def add_top_bot_flip(images):
     new_images = images
     for x in range(len(images)):
@@ -64,6 +71,7 @@ def add_top_bot_flip(images):
         print(top_bot_flip_image)
         new_images.append(top_bot_flip_image)
     return new_images
+
 
 def save_images(images):
     for x in range(len(images)):
