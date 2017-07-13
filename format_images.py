@@ -4,11 +4,8 @@
 import os
 from PIL import Image
 import numpy as np
-import PIL
-#  Image.resize(size, resample=0)
 # iterating through directory files, answer by ghostdog74
 # http://stackoverflow.com/questions/3964681/find-all-files-in-a-directory-with-extension-txt-in-python
-
 
 # modelled after cv-tricks.com tutorial on training a classifier for cats and dogs,
 # using PIL instead of OpenCV
@@ -20,7 +17,6 @@ def load_train_images(train_path, image_size, classes):
     for folder in classes:
         index = classes.index(folder)
         path = os.path.join(train_path, folder+'/')
-        # print(path)
         image_files = get_images(path)
 
         for file in image_files:
